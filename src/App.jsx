@@ -2,7 +2,12 @@ import Filters from './components/Filters/Filters';
 import Modal from './components/Modal/Modal';
 import Results from './components/Results/Results';
 import { AppProvider } from './context/AppContext';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+	Navigate,
+	Route,
+	BrowserRouter as Router,
+	Routes,
+} from 'react-router-dom';
 import Header from './components/Header/Header';
 
 import './styles/globals.css';
@@ -39,7 +44,18 @@ function App() {
 							/>
 							<Route
 								path="/characters"
-								element={<Characters />}
+								element={
+									<Characters />
+									// Protected routes
+									// token ? (
+									// 	<Characters />
+									// ) : (
+									// 	<Navigate
+									// 		to="/"
+									// 		replace
+									// 	/>
+									// )
+								}
 							/>
 							<Route
 								path="/contacto"
