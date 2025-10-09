@@ -1,4 +1,4 @@
-import { createContext, useReducer, useContext } from 'react';
+import { createContext, useReducer, useContext, useEffect } from 'react';
 
 const AppContext = createContext();
 
@@ -21,6 +21,14 @@ const initialState = {
 	characterDetail: null,
 	characterDetailLoading: false,
 	characterDetailError: null,
+
+	// Auth
+	auth: {
+		isAuthenticated: false,
+		user: null,
+		loading: true,
+	},
+	favorites: [],
 };
 
 function appReducer(state, action) {
@@ -59,6 +67,51 @@ function appReducer(state, action) {
 				characterDetailError: action.payload,
 				characterDetailLoading: false,
 			};
+
+		// auth
+		case 'AUTH_START':
+			return {
+				...state,
+				auth: {
+					...state.auth,
+					loading: true,
+				},
+			};
+		case 'LOGIN_SUCCESS':
+			return {
+				...state,
+				auth: {
+					isAuthenticated: true,
+					user: action.payload,
+					loading: false,
+				},
+			};
+		case 'LOGOUT':
+			return {
+				...state,
+				auth: {
+					isAuthenticated: false,
+					user: null,
+					loading: false,
+				},
+				favorites: [],
+			};
+		case 'AUTH_ERROR':
+			return {
+				...state,
+				auth: {
+					...state.auth,
+					loading: false,
+				},
+			};
+		case 'AUTH_FINISH_LOADING':
+			return {
+				...state,
+				auth: {
+					...state.auth,
+					loading: false,
+				},
+			};
 		default:
 			return state;
 	}
@@ -66,6 +119,26 @@ function appReducer(state, action) {
 
 export const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(appReducer, initialState);
+
+	useEffect(() => {
+		const savedAuth = localStorage.getItem('rickandmorty_auth');
+
+		if (savedAuth) {
+			const authData = JSON.parse(savedAuth);
+			dispatch({ type: 'LOGIN_SUCCESS', payload: authData.user });
+		}
+
+		dispatch({ type: 'AUTH_FINISH_LOADING' });
+	}, []);
+
+	useEffect(() => {
+		if (state.auth.loading) return;
+		if (state.auth.isAuthenticated) {
+			localStorage.setItem('rickandmorty_auth', JSON.stringify(state.auth));
+		} else {
+			localStorage.removeItem('rickandmorty_auth');
+		}
+	}, [state.auth]);
 
 	return (
 		<AppContext.Provider value={{ state, dispatch }}>

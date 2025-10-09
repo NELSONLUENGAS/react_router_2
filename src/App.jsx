@@ -14,6 +14,11 @@ import './styles/globals.css';
 import CharacterDetail from './components/CharacterDetail/CharacterDetail';
 import Characters from './components/Characters/Characters';
 import Contact from './components/Contact/Contact';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import Profile from './components/Profile/Profile';
+import Favorites from './components/Favorites/Favorites';
+import Register from './components/Register/Register';
+import Login from './components/Login/Login';
 
 function Homepage() {
 	return (
@@ -44,26 +49,42 @@ function App() {
 							/>
 							<Route
 								path="/characters"
-								element={
-									<Characters />
-									// Protected routes
-									// token ? (
-									// 	<Characters />
-									// ) : (
-									// 	<Navigate
-									// 		to="/"
-									// 		replace
-									// 	/>
-									// )
-								}
+								element={<Characters />}
 							/>
 							<Route
 								path="/contacto"
 								element={<Contact />}
 							/>
 							<Route
+								path="/login"
+								element={<Login />}
+							/>
+							<Route
+								path="/register"
+								element={<Register />}
+							/>
+							<Route
 								path="/character/:id"
 								element={<CharacterDetail />}
+							/>
+
+							{/* Private Routes */}
+							<Route
+								path="/profile"
+								element={
+									<PrivateRoute>
+										<Profile />
+									</PrivateRoute>
+								}
+							/>
+
+							<Route
+								path="/favorites"
+								element={
+									<PrivateRoute>
+										<Favorites />
+									</PrivateRoute>
+								}
 							/>
 						</Routes>
 					</div>

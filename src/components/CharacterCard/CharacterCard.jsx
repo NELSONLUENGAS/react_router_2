@@ -9,6 +9,8 @@ const CharacterCard = ({ character }) => {
 		// Todo: openModal
 	};
 
+	const isCharFavorite = false;
+
 	const handleViewDetails = (e) => {
 		e.stopPropagation();
 		navigate(`/character/${character.id}`);
@@ -16,6 +18,17 @@ const CharacterCard = ({ character }) => {
 
 	return (
 		<div className="bg-gray-800 rounded-xl overflow-hidden card-hover">
+			<button
+				onClick={'handleFavorite'}
+				className={`absolute top-2 left-2 z-10 p-2 rounded-full transition duration-300 ${
+					isCharFavorite
+						? 'bg-red-500 text-white'
+						: 'bg-gray-700 text-gray-300 hover:bg-red-500 hover:text-white'
+				}`}
+				title={isCharFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+			>
+				<i className={`fas ${isCharFavorite ? 'fa-heart' : 'fa-heart'}`}></i>
+			</button>
 			<div className="relative">
 				<img
 					src={character.image}
